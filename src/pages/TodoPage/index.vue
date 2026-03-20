@@ -49,7 +49,7 @@ import TodoList from './components/TodoList.vue'
 import TodoFooter from './components/TodoFooter.vue'
 import backHomeIconUrl from '@src/assets/svg/back-home.svg'
 
-import './index.css'
+import '@src/pages/TodoPage/index.less'
 
 const {
   todos,
