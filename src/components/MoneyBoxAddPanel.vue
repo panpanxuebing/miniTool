@@ -15,6 +15,9 @@
         v-model.number="draftAmount"
         class="moneyInput"
         type="number"
+        min="0"
+        step="0.01"
+        inputmode="numeric"
         aria-label="金额输入框"
         placeholder="金额"
       />
@@ -30,7 +33,7 @@
 
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
-import { formatYMD } from '@src/utils'
+import { formatYMD } from '../utils'
 
 const props = defineProps<{
   defaultAmount: number

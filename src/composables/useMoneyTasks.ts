@@ -37,7 +37,7 @@ function safeParseMoneyTasks(raw: string | null): MoneyTask[] {
   }
 }
 
-export function useMoneyTasks(defaultAmountPerTask = 10) {
+export function useMoneyTasks(defaultAmountPerTask = 0) {
   const tasks = ref<MoneyTask[]>(safeParseMoneyTasks(localStorage.getItem(STORAGE_KEY)))
 
   watch(
@@ -49,9 +49,8 @@ export function useMoneyTasks(defaultAmountPerTask = 10) {
   )
 
   const completedCount = computed(() => tasks.value.filter((t) => t.completed).length)
-  const totalAmount = computed(() =>
-    tasks.value.reduce((sum, t) => sum + (t.completed ? t.amount : 0), 0),
-  )
+  // “总金额”按“实际填写金额”计算：不管是否完成
+  const totalAmount = computed(() => tasks.value.reduce((sum, t) => sum + (t.amount ?? 0), 0))
 
   const sortedTasks = computed(() => {
     return [...tasks.value].sort((a, b) => b.createdAt - a.createdAt)
@@ -83,6 +82,24 @@ export function useMoneyTasks(defaultAmountPerTask = 10) {
     t.completed = !t.completed
   }
 
+  function updateTask(id: string, nextText: string, nextDate: string, nextAmount: number) {
+    const t = tasks.value.find((x) => x.id === id)
+    if (!t) return
+
+    const trimmed = nextText.trim()
+    if (trimmed) t.text = trimmed
+
+    const safeDate = nextDate?.trim() ? nextDate.trim() : t.date
+    t.date = safeDate
+
+    const parsedAmount = Number(nextAmount)
+    if (Number.isFinite(parsedAmount) && parsedAmount >= 0) t.amount = parsedAmount
+  }
+
+  function removeTask(id: string) {
+    tasks.value = tasks.value.filter((t) => t.id !== id)
+  }
+
   return {
     tasks,
     sortedTasks,
@@ -90,5 +107,7 @@ export function useMoneyTasks(defaultAmountPerTask = 10) {
     totalAmount,
     addTask,
     toggleTask,
+    updateTask,
+    removeTask,
   }
 }

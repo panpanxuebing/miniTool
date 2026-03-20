@@ -53,6 +53,8 @@
             :sorted-tasks="sortedTasks"
             :completed-count="completedCount"
             @toggle="toggleTask"
+            @update="handleUpdate"
+            @delete="handleDelete"
           />
         </div>
       </div>
@@ -66,8 +68,8 @@ import { useMoneyTasks } from '@src/composables/useMoneyTasks'
 
 import catImg from '@src/assets/money-cat.png'
 import backHomeIconUrl from '@src/assets/svg/back-home.svg'
-import MoneyBoxAddPanel from './components/AddPanel.vue'
-import MoneyBoxDetailsPanel from './components/DetailsPanel.vue'
+import MoneyBoxAddPanel from '@src/pages/MoneyBoxPage/components/AddPanel.vue'
+import MoneyBoxDetailsPanel from '@src/pages/MoneyBoxPage/components/DetailsPanel.vue'
 
 import '@src/pages/MoneyBoxPage/index.less'
 
@@ -76,10 +78,26 @@ const defaultAmountPerTask = 10
 type Panel = 'add' | 'details'
 const panel = ref<Panel>('add')
 
-const { tasks, sortedTasks, completedCount, totalAmount, addTask, toggleTask } =
-  useMoneyTasks(defaultAmountPerTask)
+const {
+  tasks,
+  sortedTasks,
+  completedCount,
+  totalAmount,
+  addTask,
+  toggleTask,
+  updateTask,
+  removeTask,
+} = useMoneyTasks(defaultAmountPerTask)
 
 function handleAdd(payload: { text: string; date: string; amount: number }) {
   addTask(payload.text, payload.date, payload.amount)
+}
+
+function handleUpdate(payload: { id: string; text: string; date: string; amount: number }) {
+  updateTask(payload.id, payload.text, payload.date, payload.amount)
+}
+
+function handleDelete(id: string) {
+  removeTask(id)
 }
 </script>

@@ -58,6 +58,8 @@
   display: flex;
   flex-direction: column;
   gap: 10px;
+  width: 50%;
+  margin: 0 auto;
 }
 
 .addMetaRow {
@@ -131,6 +133,51 @@
   max-width: 320px;
 }
 
+.taskText {
+  flex: 1;
+}
+
+.editTextInput {
+  flex: 1;
+  min-width: 140px;
+  background: var(--card2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 8px 10px;
+  color: var(--text);
+  font-size: 14px;
+  outline: none;
+}
+
+.editDateInput {
+  width: 100%;
+  background: var(--card2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 8px 10px;
+  color: var(--text);
+  font-size: 14px;
+  outline: none;
+}
+
+.editAmountInput {
+  width: 100%;
+  background: var(--card2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 8px 10px;
+  color: var(--text);
+  font-size: 14px;
+  outline: none;
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-left: 8px;
+}
+
 .completedText {
   color: rgba(255, 255, 255, 0.55);
   text-decoration: line-through;
@@ -146,3 +193,29 @@
   color: rgba(255, 255, 255, 0.92);
 }
 
+/* 禁用 number 输入框的上下箭头 */
+.addPanel input[type='number']::-webkit-outer-spin-button,
+.addPanel input[type='number']::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.addPanel input[type='number'] {
+  appearance: textfield;
+  -moz-appearance: textfield;
+}
+
+.editAmountInput::-webkit-outer-spin-button,
+.editAmountInput::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.editAmountInput {
+  appearance: textfield;
+  -moz-appearance: textfield;
+}
+
+.opCell {
+  white-space: nowrap;
+}

@@ -52,6 +52,7 @@
             <th style="width: 120px">日期</th>
             <th style="width: 110px">状态</th>
             <th style="width: 96px">金额</th>
+            <th style="width: 140px">操作</th>
           </tr>
         </thead>
         <tbody>
@@ -64,12 +65,72 @@
                 :checked="t.completed"
                 @change="$emit('toggle', t.id)"
                 :aria-label="t.completed ? '标记为未完成' : '标记为已完成'"
+                :disabled="editingId === t.id"
               />
-              <span :class="{ completedText: t.completed }" :title="t.text">{{ t.text }}</span>
+
+              <!-- 编辑态：任务文字 + 保存/取消 -->
+              <template v-if="editingId === t.id">
+                <input
+                  v-model="draftText"
+                  class="editTextInput"
+                  type="text"
+                  maxlength="120"
+                  :aria-label="`编辑任务：${t.text}`"
+                  @keydown.esc.prevent="cancelEdit"
+                />
+              </template>
+
+              <template v-else>
+                <span class="taskText" :class="{ completedText: t.completed }" :title="t.text">
+                  {{ t.text }}
+                </span>
+              </template>
             </td>
-            <td class="dateCell">{{ t.date }}</td>
+
+            <!-- 编辑态：日期 -->
+            <td class="dateCell">
+              <template v-if="editingId === t.id">
+                <input
+                  v-model="draftDate"
+                  class="editDateInput"
+                  type="date"
+                  :aria-label="`编辑日期：${t.date}`"
+                  @keydown.esc.prevent="cancelEdit"
+                />
+              </template>
+              <template v-else>
+                {{ t.date }}
+              </template>
+            </td>
+
             <td>{{ t.completed ? '已完成' : '未完成' }}</td>
-            <td class="moneyCell">{{ t.amount }}</td>
+
+            <!-- 编辑态：金额 -->
+            <td class="moneyCell">
+              <template v-if="editingId === t.id">
+                <input
+                  v-model.number="draftAmount"
+                  class="editAmountInput"
+                  type="number"
+                  :aria-label="`编辑金额：${t.amount}`"
+                  @keydown.esc.prevent="cancelEdit"
+                />
+              </template>
+              <template v-else>
+                {{ t.amount }}
+              </template>
+            </td>
+
+            <td class="opCell">
+              <div v-if="editingId === t.id" class="actions">
+                <button class="btn primary" type="button" @click="saveEdit(t.id)">保存</button>
+                <button class="btn" type="button" @click="cancelEdit">取消</button>
+              </div>
+              <div v-else class="actions">
+                <button class="btn" type="button" @click="startEdit(t)">编辑</button>
+                <button class="btn danger" type="button" @click="removeOne(t.id)">删除</button>
+              </div>
+            </td>
           </tr>
         </tbody>
       </table>
@@ -87,8 +148,10 @@ const props = defineProps<{
   completedCount: number
 }>()
 
-defineEmits<{
+const emit = defineEmits<{
   (e: 'toggle', id: string): void
+  (e: 'update', payload: { id: string; text: string; date: string; amount: number }): void
+  (e: 'delete', id: string): void
 }>()
 
 type DetailFilter = 'all' | 'active' | 'completed'
@@ -99,4 +162,32 @@ const filteredSortedTasks = computed(() => {
   if (detailFilter.value === 'completed') return props.sortedTasks.filter((t) => t.completed)
   return props.sortedTasks
 })
+
+const editingId = ref<string | null>(null)
+const draftText = ref('')
+const draftDate = ref('')
+const draftAmount = ref(0)
+
+function startEdit(task: MoneyTask) {
+  editingId.value = task.id
+  draftText.value = task.text
+  draftDate.value = task.date
+  draftAmount.value = task.amount
+}
+
+function cancelEdit() {
+  editingId.value = null
+  draftText.value = ''
+  draftDate.value = ''
+  draftAmount.value = 0
+}
+
+function saveEdit(id: string) {
+  emit('update', { id, text: draftText.value, date: draftDate.value, amount: draftAmount.value })
+  cancelEdit()
+}
+
+function removeOne(id: string) {
+  if (window.confirm('确定删除这条任务吗？')) emit('delete', id)
+}
 </script>
