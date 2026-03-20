@@ -10,7 +10,8 @@
 
       <div class="content">
         <div style="display: flex; gap: 10px; flex-wrap: wrap">
-          <router-link class="btn primary" to="/todo">待办事项</router-link>
+          <router-link class="btn" to="/todo">待办事项</router-link>
+          <router-link class="btn" to="/moneybox">储钱罐</router-link>
         </div>
 
         <div class="empty" style="margin-top: 16px">

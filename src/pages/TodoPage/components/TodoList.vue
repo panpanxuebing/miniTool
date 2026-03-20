@@ -16,7 +16,7 @@
 <script setup lang="ts">
 import { toRefs } from 'vue'
 import TodoItem from './TodoItem.vue'
-import type { Todo } from '../composables/useTodos'
+import type { Todo } from '@src/composables/useTodos'
 
 const props = defineProps<{
   todos: Todo[]

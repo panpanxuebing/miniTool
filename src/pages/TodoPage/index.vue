@@ -1,44 +1,12 @@
 <template>
   <div class="container">
     <div class="card">
-      <div class="header" style="position: relative">
-        <router-link
-          class="btn"
-          to="/"
-          aria-label="返回首页"
-          style="
-            position: absolute;
-            left: 20px;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 40px;
-            height: 40px;
-            padding: 0;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0;
-            z-index: 2;
-          "
-        >
-          <svg
-            width="16"
-            height="16"
-            viewBox="0 0 24 24"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-            aria-hidden="true"
-          >
-            <path
-              d="M3 10.5L12 3L21 10.5V21H14.5V15H9.5V21H3V10.5Z"
-              stroke="rgba(255,255,255,0.92)"
-              stroke-width="1.8"
-              stroke-linejoin="round"
-            />
-          </svg>
+      <div class="header">
+        <router-link class="btn back-home-btn" to="/" aria-label="返回首页">
+          <img :src="backHomeIconUrl" width="16" height="16" alt="" aria-hidden="true" />
         </router-link>
 
-        <div class="title" style="padding-left: 56px">
+        <div class="title page-title--with-back">
           <h1>待办事项</h1>
           <p>支持新增、完成/取消、删除、筛选、编辑与本地持久化。</p>
         </div>
@@ -74,11 +42,14 @@
 </template>
 
 <script setup lang="ts">
-import { useTodos } from '../composables/useTodos'
-import TodoInput from '../components/TodoInput.vue'
-import TodoFilters from '../components/TodoFilters.vue'
-import TodoList from '../components/TodoList.vue'
-import TodoFooter from '../components/TodoFooter.vue'
+import { useTodos } from '@src/composables/useTodos'
+import TodoInput from './components/TodoInput.vue'
+import TodoFilters from './components/TodoFilters.vue'
+import TodoList from './components/TodoList.vue'
+import TodoFooter from './components/TodoFooter.vue'
+import backHomeIconUrl from '@src/assets/svg/back-home.svg'
+
+import './index.css'
 
 const {
   todos,

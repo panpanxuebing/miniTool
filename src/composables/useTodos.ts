@@ -1,4 +1,5 @@
 import { computed, ref, watch } from 'vue'
+import { createId } from '@src/utils'
 
 export type Todo = {
   id: string
@@ -11,15 +12,6 @@ export type TodoFilter = 'all' | 'active' | 'completed'
 
 const STORAGE_KEY = 'todos-v1'
 
-function createId() {
-  if (typeof crypto !== 'undefined' && 'randomUUID' in crypto) {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const c = crypto as any
-    return c.randomUUID() as string
-  }
-  return `t_${Math.random().toString(16).slice(2)}_${Date.now()}`
-}
-
 function safeParseTodos(raw: string | null): Todo[] {
   if (!raw) return []
   try {
@@ -27,7 +19,7 @@ function safeParseTodos(raw: string | null): Todo[] {
     if (!Array.isArray(parsed)) return []
     return parsed
       .map((t) => ({
-        id: String(t.id ?? createId()),
+        id: String(t.id ?? createId('t')),
         text: String(t.text ?? ''),
         completed: Boolean(t.completed),
         createdAt: Number(t.createdAt ?? Date.now()),
@@ -63,7 +55,7 @@ export function useTodos() {
     const trimmed = text.trim()
     if (!trimmed) return
     todos.value.unshift({
-      id: createId(),
+      id: createId('t'),
       text: trimmed,
       completed: false,
       createdAt: Date.now(),

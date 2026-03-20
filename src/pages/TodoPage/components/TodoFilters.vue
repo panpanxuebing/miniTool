@@ -30,7 +30,7 @@
 
 <script setup lang="ts">
 import { toRefs } from 'vue'
-import type { TodoFilter } from '../composables/useTodos'
+import type { TodoFilter } from '@src/composables/useTodos'
 
 const props = defineProps<{
   filter: TodoFilter

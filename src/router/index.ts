@@ -1,7 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
-import Home from '../pages/Home.vue'
-import TodoPage from '../pages/TodoPage.vue'
+import Home from '@src/pages/Home/Home.vue'
+import TodoPage from '@src/pages/TodoPage/index.vue'
+import MoneyBoxPage from '@src/pages/MoneyBoxPage/index.vue'
 
 const router = createRouter({
   history: createWebHistory(),
@@ -15,6 +16,11 @@ const router = createRouter({
       path: '/todo',
       name: 'todo',
       component: TodoPage,
+    },
+    {
+      path: '/moneybox',
+      name: 'moneybox',
+      component: MoneyBoxPage,
     },
   ],
 })
