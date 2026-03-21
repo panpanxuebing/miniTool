@@ -49,8 +49,10 @@ export function useMoneyTasks(defaultAmountPerTask = 0) {
   )
 
   const completedCount = computed(() => tasks.value.filter((t) => t.completed).length)
-  // “总金额”按“实际填写金额”计算：不管是否完成
-  const totalAmount = computed(() => tasks.value.reduce((sum, t) => sum + (t.amount ?? 0), 0))
+
+  const totalAmount = computed(() =>
+    tasks.value.filter((t) => t.completed).reduce((sum, t) => sum + (t.amount ?? 0), 0),
+  )
 
   const sortedTasks = computed(() => {
     return [...tasks.value].sort((a, b) => b.createdAt - a.createdAt)

@@ -10,7 +10,16 @@
     />
 
     <div class="addMetaRow">
-      <input v-model="draftDate" class="moneyInput" type="date" aria-label="日期输入框" />
+      <el-date-picker
+        v-model="draftDate"
+        class="moneyBoxDatePicker"
+        type="date"
+        value-format="YYYY-MM-DD"
+        format="YYYY-MM-DD"
+        placeholder="选择日期"
+        clearable
+        aria-label="日期选择"
+      />
       <input
         v-model.number="draftAmount"
         class="moneyInput"

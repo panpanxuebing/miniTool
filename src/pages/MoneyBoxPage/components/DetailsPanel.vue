@@ -49,7 +49,7 @@
           <tr>
             <th style="width: 54px">序号</th>
             <th>任务</th>
-            <th style="width: 120px">日期</th>
+            <th style="width: 150px">日期</th>
             <th style="width: 110px">状态</th>
             <th style="width: 96px">金额</th>
             <th style="width: 140px">操作</th>
@@ -59,41 +59,47 @@
           <tr v-for="(t, i) in filteredSortedTasks" :key="t.id">
             <td>{{ i + 1 }}</td>
             <td class="taskCell">
-              <input
-                class="checkBox"
-                type="checkbox"
-                :checked="t.completed"
-                @change="$emit('toggle', t.id)"
-                :aria-label="t.completed ? '标记为未完成' : '标记为已完成'"
-                :disabled="editingId === t.id"
-              />
-
-              <!-- 编辑态：任务文字 + 保存/取消 -->
-              <template v-if="editingId === t.id">
+              <div class="taskCellRow">
                 <input
-                  v-model="draftText"
-                  class="editTextInput"
-                  type="text"
-                  maxlength="120"
-                  :aria-label="`编辑任务：${t.text}`"
-                  @keydown.esc.prevent="cancelEdit"
+                  class="checkBox"
+                  type="checkbox"
+                  :checked="t.completed"
+                  @change="$emit('toggle', t.id)"
+                  :aria-label="t.completed ? '标记为未完成' : '标记为已完成'"
+                  :disabled="editingId === t.id"
                 />
-              </template>
 
-              <template v-else>
-                <span class="taskText" :class="{ completedText: t.completed }" :title="t.text">
-                  {{ t.text }}
-                </span>
-              </template>
+                <!-- 编辑态：任务文字 -->
+                <template v-if="editingId === t.id">
+                  <input
+                    v-model="draftText"
+                    class="editTextInput"
+                    type="text"
+                    maxlength="120"
+                    :aria-label="`编辑任务：${t.text}`"
+                    @keydown.esc.prevent="cancelEdit"
+                  />
+                </template>
+
+                <template v-else>
+                  <span class="taskText" :class="{ completedText: t.completed }" :title="t.text">
+                    {{ t.text }}
+                  </span>
+                </template>
+              </div>
             </td>
 
             <!-- 编辑态：日期 -->
             <td class="dateCell">
               <template v-if="editingId === t.id">
-                <input
+                <el-date-picker
                   v-model="draftDate"
-                  class="editDateInput"
+                  class="moneyBoxDatePicker moneyBoxDatePicker--table"
                   type="date"
+                  value-format="YYYY-MM-DD"
+                  format="YYYY-MM-DD"
+                  placeholder="选择日期"
+                  clearable
                   :aria-label="`编辑日期：${t.date}`"
                   @keydown.esc.prevent="cancelEdit"
                 />
@@ -103,7 +109,11 @@
               </template>
             </td>
 
-            <td>{{ t.completed ? '已完成' : '未完成' }}</td>
+            <td>
+              <span class="statusPill" :class="{ 'statusPill--done': t.completed }">
+                {{ t.completed ? '已完成' : '未完成' }}
+              </span>
+            </td>
 
             <!-- 编辑态：金额 -->
             <td class="moneyCell">
@@ -188,6 +198,16 @@ function saveEdit(id: string) {
 }
 
 function removeOne(id: string) {
-  if (window.confirm('确定删除这条任务吗？')) emit('delete', id)
+  ElMessageBox.confirm('确定删除这条任务吗？', '提示', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning',
+  })
+    .then(() => {
+      emit('delete', id)
+    })
+    .catch(() => {
+      // 用户取消，无操作
+    })
 }
 </script>

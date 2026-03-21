@@ -73,7 +73,7 @@ import MoneyBoxDetailsPanel from '@src/pages/MoneyBoxPage/components/DetailsPane
 
 import '@src/pages/MoneyBoxPage/index.less'
 
-const defaultAmountPerTask = 10
+const defaultAmountPerTask = 0
 
 type Panel = 'add' | 'details'
 const panel = ref<Panel>('add')
