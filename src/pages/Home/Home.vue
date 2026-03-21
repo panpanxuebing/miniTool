@@ -13,10 +13,6 @@
           <router-link class="btn" to="/todo">待办事项</router-link>
           <router-link class="btn" to="/moneybox">储钱罐</router-link>
         </div>
-
-        <div class="empty" style="margin-top: 16px">
-          你可以在首页菜单导航到 `/todo`，查看待办事项应用。
-        </div>
       </div>
     </div>
   </div>

@@ -18,8 +18,6 @@ declare module 'vue' {
     ElDropdownMenu: typeof import('element-plus/es')['ElDropdownMenu']
     ElIcon: typeof import('element-plus/es')['ElIcon']
     ElTag: typeof import('element-plus/es')['ElTag']
-    MoneyBoxAddPanel: typeof import('./components/MoneyBoxAddPanel.vue')['default']
-    MoneyBoxDetailsPanel: typeof import('./components/MoneyBoxDetailsPanel.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
   }
