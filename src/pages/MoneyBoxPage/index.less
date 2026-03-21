@@ -89,6 +89,113 @@
   margin-bottom: 12px;
 }
 
+.detailQueryRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px 20px;
+}
+
+.detailDateQuery {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.detailDateQuery__label {
+  font-size: 13px;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.detailDateQuery__label--action {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  padding-bottom: 1px;
+  font-size: 14px;
+  transition:
+    color 0.15s ease,
+    border-color 0.15s ease;
+
+  &:hover {
+    color: var(--text);
+    border-bottom-color: rgba(110, 168, 254, 0.55);
+  }
+
+  &:hover .detailDateQuery__caret {
+    color: var(--text);
+  }
+
+  &:focus-visible {
+    outline: 2px solid rgba(110, 168, 254, 0.45);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+}
+
+.detailDateQuery__title {
+  flex-shrink: 0;
+}
+
+.detailDateQuery__modeHint {
+  font-size: 14px;
+  opacity: 0.88;
+}
+
+.detailDateQuery__caret {
+  font-size: 12px;
+  color: var(--muted);
+  flex-shrink: 0;
+  transition: color 0.15s ease;
+}
+
+.detailFooterSummary {
+  margin-top: 12px;
+  text-align: right;
+}
+
+.moneyBox .moneyBoxDatePicker--filter.el-date-editor {
+  width: 150px;
+}
+
+.moneyBox .moneyBoxDatePicker--filterRange.el-date-editor {
+  width: 268px;
+}
+
+/* 区间选择器：整框与分隔区与深色卡片一致（避免默认浅色底） */
+.moneyBox .moneyBoxDatePicker--filterRange.el-date-editor.el-input__wrapper,
+.moneyBox .moneyBoxDatePicker--filterRange .el-input__wrapper {
+  background-color: var(--card2);
+  box-shadow: 0 0 0 1px var(--border) inset;
+  border-radius: 12px;
+}
+
+.moneyBox .moneyBoxDatePicker--filterRange .el-range-input {
+  color: var(--text);
+  background-color: transparent;
+}
+
+.moneyBox .moneyBoxDatePicker--filterRange .el-range-input::placeholder {
+  color: var(--muted);
+}
+
+.moneyBox .moneyBoxDatePicker--filterRange .el-range-separator {
+  color: var(--muted);
+}
+
+.moneyBox .moneyBoxDatePicker--filterRange .el-input__prefix-inner,
+.moneyBox .moneyBoxDatePicker--filterRange .el-input__suffix-inner {
+  color: var(--muted);
+}
+
+.detailFilters {
+  margin-top: 0;
+}
+
 .tableWrap {
   overflow: auto;
   border-radius: 14px;

@@ -90,7 +90,17 @@ function toggle() {
 }
 
 function remove() {
-  emit('remove', todo.value.id)
+  ElMessageBox.confirm('确定删除这条待办吗？', '提示', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning',
+  })
+    .then(() => {
+      emit('remove', todo.value.id)
+    })
+    .catch(() => {
+      // 用户取消，无操作
+    })
 }
 
 function startEdit() {

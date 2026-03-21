@@ -51,7 +51,6 @@
             v-else
             :tasks="tasks"
             :sorted-tasks="sortedTasks"
-            :completed-count="completedCount"
             @toggle="toggleTask"
             @update="handleUpdate"
             @delete="handleDelete"
@@ -78,16 +77,8 @@ const defaultAmountPerTask = 0
 type Panel = 'add' | 'details'
 const panel = ref<Panel>('add')
 
-const {
-  tasks,
-  sortedTasks,
-  completedCount,
-  totalAmount,
-  addTask,
-  toggleTask,
-  updateTask,
-  removeTask,
-} = useMoneyTasks(defaultAmountPerTask)
+const { tasks, sortedTasks, totalAmount, addTask, toggleTask, updateTask, removeTask } =
+  useMoneyTasks(defaultAmountPerTask)
 
 function handleAdd(payload: { text: string; date: string; amount: number }) {
   addTask(payload.text, payload.date, payload.amount)

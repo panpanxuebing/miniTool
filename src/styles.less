@@ -210,3 +210,30 @@ body {
   color: var(--muted);
   font-size: 13px;
 }
+
+/* ElMessageBox：固定在视口距顶 30%，不再使用默认垂直居中 */
+.is-message-box .el-overlay-message-box {
+  display: block;
+  padding: 0;
+  text-align: center;
+}
+
+.is-message-box .el-overlay-message-box::after {
+  display: none;
+  content: none;
+}
+
+.is-message-box .el-overlay-message-box .el-message-box {
+  position: fixed;
+  left: 50%;
+  top: 30%;
+  transform: translateX(-50%);
+  margin: 0;
+  vertical-align: top;
+}
+
+/* 储钱罐详情：日期查询模式菜单当前项（下拉常挂到 body） */
+body .el-dropdown-menu__item.is-active-mode {
+  color: var(--primary);
+  font-weight: 600;
+}
