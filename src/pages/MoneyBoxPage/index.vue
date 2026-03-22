@@ -70,7 +70,7 @@ import backHomeIconUrl from '@src/assets/svg/back-home.svg'
 import MoneyBoxAddPanel from '@src/pages/MoneyBoxPage/components/AddPanel.vue'
 import MoneyBoxDetailsPanel from '@src/pages/MoneyBoxPage/components/DetailsPanel.vue'
 
-import '@src/pages/MoneyBoxPage/index.less'
+import './index.less'
 
 const defaultAmountPerTask = 0
 
