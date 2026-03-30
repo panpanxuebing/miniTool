@@ -41,6 +41,11 @@
   text-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
   color: rgb(69 133 52 / 95%);
   pointer-events: none;
+
+  &.amountOverlay--low {
+    color: rgb(220 100 90 / 95%);
+    text-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  }
 }
 
 .panelButtons {
@@ -60,6 +65,30 @@
   gap: 10px;
   width: 50%;
   margin: 0 auto;
+}
+
+.expensePanel {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.expenseForm.addPanel {
+  width: 50%;
+  margin: 0 auto;
+}
+
+.expenseEmpty {
+  text-align: center;
+  padding: 12px 0;
+}
+
+.expenseTableWrap {
+  margin-top: 4px;
+}
+
+.moneyCell--expense {
+  color: rgba(255, 160, 140, 0.95);
 }
 
 .addMetaRow {
@@ -337,9 +366,16 @@
   margin: 0;
 }
 
-.addPanel input[type='number'] {
+.addPanel input[type='number'],
+.expenseForm input[type='number'] {
   appearance: textfield;
   -moz-appearance: textfield;
+}
+
+.expenseForm input[type='number']::-webkit-outer-spin-button,
+.expenseForm input[type='number']::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
 
 .editAmountInput::-webkit-outer-spin-button,
