@@ -16,10 +16,10 @@
       <div class="content">
         <div class="moneyStage">
           <div class="catWrap" aria-label="招财猫">
-            <img :src="catImg" alt="招财猫" class="catImg" />
             <div class="amountOverlay" :class="{ 'amountOverlay--low': balanceAmount < 0 }">
               ￥{{ balanceAmount }}
             </div>
+            <img :src="catImg" alt="招财猫" class="catImg" />
           </div>
 
           <div class="panelButtons">

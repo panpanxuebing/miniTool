@@ -13,7 +13,7 @@
 .catWrap {
   width: 100%;
   max-width: 420px;
-  height: 400px;
+  height: 500px;
   position: relative;
   border-radius: 16px;
   overflow: hidden;
@@ -22,29 +22,54 @@
 }
 
 .catImg {
-  width: 100%;
-  height: 100%;
+  position: relative;
+  z-index: 1;
+  width: 400px;
   object-fit: cover;
   object-position: left center;
   transform: scale(1.08);
   filter: saturate(1.05) contrast(1.02);
+  padding-top: 64px;
 }
 
 .amountOverlay {
   position: absolute;
   left: 50%;
-  top: 50%;
-  transform: translate(-50%, -56%);
+  top: 14px;
+  transform: translateX(-50%);
+  z-index: 2;
+  text-align: center;
   font-size: 64px;
   font-weight: 800;
   letter-spacing: 1px;
-  text-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
-  color: rgb(69 133 52 / 95%);
+  text-shadow:
+    0 8px 18px rgba(0, 0, 0, 0.35),
+    0 0 12px rgba(255, 223, 145, 0.5),
+    0 0 28px rgba(255, 223, 145, 0.3);
+  color: #ffdfa0;
   pointer-events: none;
+  animation: amountBreath 2.4s ease-in-out infinite;
 
   &.amountOverlay--low {
     color: rgb(220 100 90 / 95%);
     text-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+    animation: none;
+  }
+}
+
+@keyframes amountBreath {
+
+  0%,
+  100% {
+    transform: translateX(-50%) scale(1);
+    opacity: 0.95;
+    filter: drop-shadow(0 0 4px rgba(255, 223, 145, 0.35));
+  }
+
+  50% {
+    transform: translateX(-50%) scale(1.04);
+    opacity: 1;
+    filter: drop-shadow(0 0 14px rgba(255, 223, 145, 0.65));
   }
 }
 
