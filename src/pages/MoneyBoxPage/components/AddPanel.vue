@@ -9,6 +9,18 @@
       aria-label="任务输入框"
     />
 
+    <div class="quickTasks" role="group" aria-label="快捷任务">
+      <button
+        v-for="label in quickTaskLabels"
+        :key="label"
+        type="button"
+        class="chip quickTasks__chip"
+        @click="pickQuick(label)"
+      >
+        {{ label }}
+      </button>
+    </div>
+
     <div class="addMetaRow">
       <el-date-picker
         v-model="draftDate"
@@ -49,9 +61,16 @@ const emit = defineEmits<{
   (e: 'add', payload: { text: string; date: string; amount: number }): void
 }>()
 
+/** 一键填入任务名称，仍可在输入框中修改 */
+const quickTaskLabels = ['洗碗', '拖地', '晒衣服', '打羽毛球'] as const
+
 const draftText = ref('')
 const draftDate = ref(formatYMD(Date.now()))
 const draftAmount = ref(props.defaultAmount)
+
+function pickQuick(label: string) {
+  draftText.value = label
+}
 
 watch(
   () => props.defaultAmount,
