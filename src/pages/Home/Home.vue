@@ -12,6 +12,7 @@
         <div style="display: flex; gap: 10px; flex-wrap: wrap">
           <router-link class="btn" to="/todo">待办事项</router-link>
           <router-link class="btn" to="/moneybox">储钱罐</router-link>
+          <router-link class="btn" to="/study-diary">学习日记</router-link>
         </div>
       </div>
     </div>
