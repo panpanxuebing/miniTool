@@ -34,25 +34,26 @@ function safeParseExpenses(raw: string | null): MoneyExpense[] {
   }
 }
 
+// 单例：模块级 state + 单次 watch
+const expenses = ref<MoneyExpense[]>(safeParseExpenses(localStorage.getItem(STORAGE_KEY)))
+
+watch(
+  expenses,
+  (next) => {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(next))
+  },
+  { deep: true },
+)
+
+const totalExpenseAmount = computed(() =>
+  expenses.value.reduce((sum, e) => sum + (e.amount > 0 ? e.amount : 0), 0),
+)
+
+const sortedExpenses = computed(() => {
+  return [...expenses.value].sort((a, b) => b.createdAt - a.createdAt)
+})
+
 export function useMoneyExpenses() {
-  const expenses = ref<MoneyExpense[]>(safeParseExpenses(localStorage.getItem(STORAGE_KEY)))
-
-  watch(
-    expenses,
-    (next) => {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(next))
-    },
-    { deep: true },
-  )
-
-  const totalExpenseAmount = computed(() =>
-    expenses.value.reduce((sum, e) => sum + (e.amount > 0 ? e.amount : 0), 0),
-  )
-
-  const sortedExpenses = computed(() => {
-    return [...expenses.value].sort((a, b) => b.createdAt - a.createdAt)
-  })
-
   function addExpense(text: string, date: string, amount: number) {
     const trimmed = text.trim()
     if (!trimmed) return

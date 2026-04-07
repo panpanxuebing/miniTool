@@ -37,26 +37,32 @@ function safeParseMoneyTasks(raw: string | null): MoneyTask[] {
   }
 }
 
+// 单例：模块级 state + 单次 watch
+const tasks = ref<MoneyTask[]>(safeParseMoneyTasks(localStorage.getItem(STORAGE_KEY)))
+
+/** 新增任务时金额兜底，由最近一次 useMoneyTasks 调用注入 */
+let defaultAmountForNewTask = 0
+
+watch(
+  tasks,
+  (next) => {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(next))
+  },
+  { deep: true },
+)
+
+const completedCount = computed(() => tasks.value.filter((t) => t.completed).length)
+
+const totalAmount = computed(() =>
+  tasks.value.filter((t) => t.completed).reduce((sum, t) => sum + (t.amount ?? 0), 0),
+)
+
+const sortedTasks = computed(() => {
+  return [...tasks.value].sort((a, b) => b.createdAt - a.createdAt)
+})
+
 export function useMoneyTasks(defaultAmountPerTask = 0) {
-  const tasks = ref<MoneyTask[]>(safeParseMoneyTasks(localStorage.getItem(STORAGE_KEY)))
-
-  watch(
-    tasks,
-    (next) => {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(next))
-    },
-    { deep: true },
-  )
-
-  const completedCount = computed(() => tasks.value.filter((t) => t.completed).length)
-
-  const totalAmount = computed(() =>
-    tasks.value.filter((t) => t.completed).reduce((sum, t) => sum + (t.amount ?? 0), 0),
-  )
-
-  const sortedTasks = computed(() => {
-    return [...tasks.value].sort((a, b) => b.createdAt - a.createdAt)
-  })
+  defaultAmountForNewTask = defaultAmountPerTask
 
   function addTask(text: string, date: string, amount: number) {
     const trimmed = text.trim()
@@ -66,7 +72,7 @@ export function useMoneyTasks(defaultAmountPerTask = 0) {
     const safeDate = date?.trim() ? date.trim() : formatYMD(createdAt)
     const parsedAmount = Number(amount)
     const safeAmount =
-      Number.isFinite(parsedAmount) && parsedAmount >= 0 ? parsedAmount : defaultAmountPerTask
+      Number.isFinite(parsedAmount) && parsedAmount >= 0 ? parsedAmount : defaultAmountForNewTask
 
     tasks.value.unshift({
       id: createId('m'),

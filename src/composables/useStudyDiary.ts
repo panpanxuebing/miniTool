@@ -32,36 +32,37 @@ function safeParse(raw: string | null): StudyDiaryEntry[] {
   }
 }
 
+// 单例：模块级 state + 单次 watch，避免多次调用重复注册 watcher
+const entries = ref<StudyDiaryEntry[]>(safeParse(localStorage.getItem(STORAGE_KEY)))
+
+watch(
+  entries,
+  (next) => {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(next))
+  },
+  { deep: true },
+)
+
+/** 按日期从新到旧，同日按创建时间从新到旧 */
+const sortedEntries = computed(() => {
+  return [...entries.value].sort((a, b) => {
+    if (a.date !== b.date) return b.date.localeCompare(a.date)
+    return b.createdAt - a.createdAt
+  })
+})
+
+/** 按日期分组，日期降序（sortedEntries 已降序，Map 插入顺序即降序，无需再排） */
+const entriesByDate = computed(() => {
+  const map = new Map<string, StudyDiaryEntry[]>()
+  for (const e of sortedEntries.value) {
+    const list = map.get(e.date) ?? []
+    list.push(e)
+    map.set(e.date, list)
+  }
+  return [...map.entries()]
+})
+
 export function useStudyDiary() {
-  const entries = ref<StudyDiaryEntry[]>(safeParse(localStorage.getItem(STORAGE_KEY)))
-
-  watch(
-    entries,
-    (next) => {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(next))
-    },
-    { deep: true },
-  )
-
-  /** 按日期从新到旧，同日按创建时间从新到旧 */
-  const sortedEntries = computed(() => {
-    return [...entries.value].sort((a, b) => {
-      if (a.date !== b.date) return b.date.localeCompare(a.date)
-      return b.createdAt - a.createdAt
-    })
-  })
-
-  /** 按日期分组，日期降序 */
-  const entriesByDate = computed(() => {
-    const map = new Map<string, StudyDiaryEntry[]>()
-    for (const e of sortedEntries.value) {
-      const list = map.get(e.date) ?? []
-      list.push(e)
-      map.set(e.date, list)
-    }
-    return [...map.entries()].sort((a, b) => b[0].localeCompare(a[0]))
-  })
-
   function addEntry(date: string, content: string) {
     const trimmed = content.trim()
     if (!trimmed) return
