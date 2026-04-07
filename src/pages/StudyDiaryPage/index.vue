@@ -35,10 +35,19 @@
             v-model="draftContent"
             class="studyDiary__textarea"
             rows="5"
-            maxlength="4000"
+            :maxlength="contentMaxLen"
             placeholder="例如：今日复习了 Vue 组合式 API，完成一个小练习…"
             aria-label="学习内容"
+            aria-describedby="study-content-count"
           />
+          <p
+            id="study-content-count"
+            class="studyDiary__charCount"
+            :class="{ 'studyDiary__charCount--warn': draftCount >= contentMaxLen * 0.95 }"
+            aria-live="polite"
+          >
+            {{ draftCount }} / {{ contentMaxLen }}
+          </p>
           <div class="studyDiary__actions">
             <button class="btn primary" type="button" :disabled="!canSubmit" @click="submit">
               保存记录
@@ -56,12 +65,22 @@
                 <li v-for="item in items" :key="item.id" class="studyDiary__item">
                   <template v-if="editingId === item.id">
                     <textarea
+                      :id="`edit-content-${item.id}`"
                       v-model="editDraft"
                       class="studyDiary__textarea studyDiary__textarea--inline"
                       rows="4"
-                      maxlength="4000"
+                      :maxlength="contentMaxLen"
                       :aria-label="`编辑：${date}`"
+                      :aria-describedby="`edit-content-count-${item.id}`"
                     />
+                    <p
+                      :id="`edit-content-count-${item.id}`"
+                      class="studyDiary__charCount"
+                      :class="{ 'studyDiary__charCount--warn': editCount >= contentMaxLen * 0.95 }"
+                      aria-live="polite"
+                    >
+                      {{ editCount }} / {{ contentMaxLen }}
+                    </p>
                     <div class="studyDiary__itemActions">
                       <button class="btn primary" type="button" @click="saveEdit(item.id)">
                         保存
@@ -90,6 +109,8 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
+import { onBeforeRouteLeave } from 'vue-router'
+import { ElMessageBox } from 'element-plus'
 import { formatYMD } from '@src/utils'
 import type { StudyDiaryEntry } from '@src/composables/useStudyDiary'
 import { useStudyDiary } from '@src/composables/useStudyDiary'
@@ -97,12 +118,16 @@ import backHomeIconUrl from '@src/assets/svg/back-home.svg'
 
 import './index.less'
 
+const contentMaxLen = 4000
+
 const draftDate = ref(formatYMD(Date.now()))
 const draftContent = ref('')
 
 const { entries, entriesByDate, addEntry, updateEntry, removeEntry } = useStudyDiary()
 
 const canSubmit = computed(() => draftContent.value.trim().length > 0 && !!draftDate.value)
+const draftCount = computed(() => draftContent.value.length)
+const editCount = computed(() => editDraft.value.length)
 
 function submit() {
   if (!canSubmit.value || !draftDate.value) return
@@ -128,8 +153,19 @@ function saveEdit(id: string) {
   cancelEdit()
 }
 
-function remove(id: string) {
+async function remove(id: string) {
+  await ElMessageBox.confirm('确定删除这条记录吗？', '删除确认', {
+    confirmButtonText: '删除',
+    cancelButtonText: '取消',
+    type: 'warning',
+  })
   removeEntry(id)
   if (editingId.value === id) cancelEdit()
 }
+
+onBeforeRouteLeave(() => {
+  if (editingId.value) {
+    return window.confirm('有未保存的编辑内容，确定离开吗？')
+  }
+})
 </script>
