@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(edge-tts --list-voices)",
+      "Bash(edge-tts:*)"
+    ]
+  }
+}

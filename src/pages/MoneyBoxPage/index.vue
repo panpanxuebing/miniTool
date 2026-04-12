@@ -95,6 +95,7 @@ import { useMoneyTasks } from '@src/composables/useMoneyTasks'
 import catImg from '@src/assets/money-cat.png'
 import backHomeIconUrl from '@src/assets/svg/back-home.svg'
 import coinMp3 from '@src/assets/coin.mp3'
+import encourageMp3 from '@src/assets/encourage.mp3'
 import MoneyBoxAddPanel from '@src/pages/MoneyBoxPage/components/AddPanel.vue'
 import MoneyBoxExpensePanel from '@src/pages/MoneyBoxPage/components/ExpensePanel.vue'
 import MoneyBoxDetailsPanel from '@src/pages/MoneyBoxPage/components/DetailsPanel.vue'
@@ -132,14 +133,7 @@ function playCoinSound() {
 }
 
 function playEncouragement() {
-  if (!window.speechSynthesis) return
-  window.speechSynthesis.cancel()
-  const text = `你现在有${balanceAmount.value}元钱，继续加油哦`
-  const utter = new SpeechSynthesisUtterance(text)
-  utter.lang = 'zh-CN'
-  utter.rate = 0.88
-  utter.pitch = 1.05
-  window.speechSynthesis.speak(utter)
+  new Audio(encourageMp3).play()
 }
 
 function triggerCoinEffect() {
