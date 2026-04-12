@@ -77,7 +77,7 @@
             v-show="panel === 'details'"
             :tasks="tasks"
             :sorted-tasks="sortedTasks"
-            @toggle="toggleTask"
+            @toggle="handleToggle"
             @update="handleUpdate"
             @delete="handleDelete"
           />
@@ -142,6 +142,21 @@ function playEncouragement() {
   window.speechSynthesis.speak(utter)
 }
 
+function triggerCoinEffect() {
+  playCoinSound()
+  catBouncing.value = false
+  requestAnimationFrame(() => {
+    catBouncing.value = true
+    setTimeout(() => {
+      catBouncing.value = false
+    }, 450)
+  })
+  showCoinHint.value = true
+  setTimeout(() => {
+    showCoinHint.value = false
+  }, 900)
+}
+
 function handleCatClick() {
   // 弹跳动画
   catBouncing.value = false
@@ -155,15 +170,19 @@ function handleCatClick() {
   clickCount.value++
   if (clickCount.value % 2 === 1) {
     // 奇数次：钱币声 + 短暂显示硬币提示
-    playCoinSound()
-    showCoinHint.value = true
-    setTimeout(() => {
-      showCoinHint.value = false
-    }, 900)
+    triggerCoinEffect()
   } else {
     // 偶数次：语音播报余额
     playEncouragement()
   }
+}
+
+function handleToggle(id: string) {
+  const task = tasks.value.find((t) => t.id === id)
+  const wasCompleted = task?.completed ?? true
+  toggleTask(id)
+  // 未完成 → 完成才算入账
+  if (!wasCompleted) triggerCoinEffect()
 }
 
 function handleAdd(payload: { text: string; date: string; amount: number }) {
