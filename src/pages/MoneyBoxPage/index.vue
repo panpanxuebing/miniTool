@@ -15,11 +15,19 @@
 
       <div class="content">
         <div class="moneyStage">
-          <div class="catWrap" aria-label="招财猫">
+          <div class="catWrap" aria-label="招财猫" title="点击互动" @click="handleCatClick">
             <div class="amountOverlay" :class="{ 'amountOverlay--low': balanceAmount < 0 }">
               ￥{{ balanceAmount }}
             </div>
-            <img :src="catImg" alt="招财猫" class="catImg" />
+            <img
+              :src="catImg"
+              alt="招财猫"
+              class="catImg"
+              :class="{ 'catImg--bounce': catBouncing }"
+            />
+            <transition name="coin-fade">
+              <div v-if="showCoinHint" class="coinHint">🪙</div>
+            </transition>
           </div>
 
           <div class="panelButtons">
@@ -86,6 +94,7 @@ import { useMoneyTasks } from '@src/composables/useMoneyTasks'
 
 import catImg from '@src/assets/money-cat.png'
 import backHomeIconUrl from '@src/assets/svg/back-home.svg'
+import coinMp3 from '@src/assets/coin.mp3'
 import MoneyBoxAddPanel from '@src/pages/MoneyBoxPage/components/AddPanel.vue'
 import MoneyBoxExpensePanel from '@src/pages/MoneyBoxPage/components/ExpensePanel.vue'
 import MoneyBoxDetailsPanel from '@src/pages/MoneyBoxPage/components/DetailsPanel.vue'
@@ -111,6 +120,51 @@ const { sortedExpenses, totalExpenseAmount, addExpense, updateExpense, removeExp
   useMoneyExpenses()
 
 const balanceAmount = computed(() => savedTotal.value - totalExpenseAmount.value)
+
+// --- 点击互动 ---
+const clickCount = ref(0)
+const catBouncing = ref(false)
+const showCoinHint = ref(false)
+
+function playCoinSound() {
+  const audio = new Audio(coinMp3)
+  audio.play()
+}
+
+function playEncouragement() {
+  if (!window.speechSynthesis) return
+  window.speechSynthesis.cancel()
+  const text = `你现在有${balanceAmount.value}元钱，继续加油哦`
+  const utter = new SpeechSynthesisUtterance(text)
+  utter.lang = 'zh-CN'
+  utter.rate = 0.88
+  utter.pitch = 1.05
+  window.speechSynthesis.speak(utter)
+}
+
+function handleCatClick() {
+  // 弹跳动画
+  catBouncing.value = false
+  requestAnimationFrame(() => {
+    catBouncing.value = true
+    setTimeout(() => {
+      catBouncing.value = false
+    }, 450)
+  })
+
+  clickCount.value++
+  if (clickCount.value % 2 === 1) {
+    // 奇数次：钱币声 + 短暂显示硬币提示
+    playCoinSound()
+    showCoinHint.value = true
+    setTimeout(() => {
+      showCoinHint.value = false
+    }, 900)
+  } else {
+    // 偶数次：语音播报余额
+    playEncouragement()
+  }
+}
 
 function handleAdd(payload: { text: string; date: string; amount: number }) {
   addTask(payload.text, payload.date, payload.amount)
